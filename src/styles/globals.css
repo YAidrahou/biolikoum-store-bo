@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #e3960f;
+  --primary-500: #fab133;
+  --secondary: #1d1d1d;
+  --text: #fcfcfc;
+  --background: #f5f3f3;
+  --in-stock: #000000;
+  --low-stock: #e3960f;
+  --out-stock: #b01818;
+  --white-color: #ffffff;
+}
+
+.dark {
+  --primary: #fcfcfc;
+  --secondary: #e3960f;
+  --background: #1d1d1d;
+}
+
+/* Ensure no elements are contenteditable */
+[contenteditable="true"] {
+  outline: none;
+  border: none;
+}
+
+/* Ensure text is not selectable if not needed */
+body, .layout, .content {
+  user-select: none;
+}
+
+
