@@ -2,10 +2,10 @@ import { Product } from "@/types/Product";
 import getColor from "@/utils/helpers/getColor";
 import { useState } from 'react';
 
-const ProductCardEdit = ({ product, cancelToggle, updateToggle }: { product: Product, cancelToggle: () => void, updateToggle: () => void }) => {
+const ProductCardEdit = ({ product, cancelToggle, updateToggle }: { product: any, cancelToggle: () => void, updateToggle: () => void }) => {
     const [updatedProduct, setUpdatedProduct] = useState(product);
 
-    const handleInputChange = (field: keyof Product, value: any) => {
+    const handleInputChange = (field: any, value: any) => {
         setUpdatedProduct({ ...updatedProduct, [field]: value });
     };
 
@@ -26,7 +26,7 @@ const ProductCardEdit = ({ product, cancelToggle, updateToggle }: { product: Pro
             </div>
 
             {/* Product Info */}
-            <div className="space-y-6">
+            <div className="flex flex-col">
                 <div className="space-y-2">
                     <div className="flex items-start justify-between">
                         <div className="space-y-3">

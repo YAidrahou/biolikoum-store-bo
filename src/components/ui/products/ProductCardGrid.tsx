@@ -15,11 +15,11 @@ const ProductCardGrid = ({ product }: { product: Product }) => {
                 <ProductActions />
             </div>
             <div className="flex flex-row justify-between w-full mb-4">
-                <p className="font-bold text-2xl">{product.price} MAD</p>
-                <span className={`rounded-3xl ${getColor(product.status)} text-white font-semibold text-center px-5 py-1`}>{product.status}</span>
+                <p className="font-bold text-2xl">100 MAD</p>
+                <span className={`rounded-3xl ${getColor(product.status)} text-white font-semibold text-center px-5 py-1`}>{/*product.status*/}In Stock</span>
             </div>
-            <p className="text-gray-500 text-[18px] w-full text-lef mb-4">Stock: {product.stock} {product.stock > 1 ? ` units` : ` unit`}</p>
-            <Link href={`/products/${product.id}`} className="border rounded-lg border-gray-300 text-secondary w-full py-4 font-semibold hover:border-primary cursor-pointer text-center">View Product</Link>
+            <p className="text-gray-500 text-[18px] w-full text-lef mb-4">Stock: 20 units{/*product.stock*/} {/*product.stock > 1 ? ` units` : ` unit`*/}</p>
+            <Link href={`/products/${product._id}`} className="border rounded-lg border-gray-300 text-secondary w-full py-4 font-semibold hover:border-primary cursor-pointer text-center">View Product</Link>
         </div>
     );
 }

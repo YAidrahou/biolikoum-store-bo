@@ -16,9 +16,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <div className="h-screen flex flex-col">
+        <div className="h-screen flex flex-col overflow-hidden">
           <Header />
-          <main className="flex-1 bg-background">
+          <main className="flex-1 bg-background overflow-y-auto">
             {children}
           </main>
           <Footer />

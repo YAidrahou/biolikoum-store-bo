@@ -1,25 +1,24 @@
 'use client';
 import TableLayout from "@/components/common/tablewithdata/TableLayout";
-import { CategoriesProvider, useCategoriesContext } from "@/context/CategoriesContext";
+import useCategoriesHooks from "@/hooks/CategoriesHooks";
 import { CategoryIn } from "@/types/CategoryIn";
 import { useState } from "react";
 
 const Categories = () => {
 
     const [isAdding, setIsAdding] = useState(false);
-    const [isUpdating, setIsUpdating] = useState(false);
 
 
     const {
-        loading,
+        loadingCategories,
         categories,
         add,
         update,
         remove
-    } = useCategoriesContext();
+    } = useCategoriesHooks();
 
 
-    if (loading) {
+    if (loadingCategories) {
         return <div>Loading...</div>
     }
 

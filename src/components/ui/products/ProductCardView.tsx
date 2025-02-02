@@ -1,7 +1,7 @@
 import { Product } from "@/types/Product";
 import getColor from "@/utils/helpers/getColor";
 
-const ProductCardView = ({ product, editeToggle }: { product: Product, editeToggle: (id:number) => void }) => {
+const ProductCardView = ({ product, editeToggle }: { product: any, editeToggle: (id:number) => void }) => {
 
     return (
         <div className="grid gap-6 lg:grid-cols-2 lg:grid-rows-1 py-8">
@@ -15,7 +15,7 @@ const ProductCardView = ({ product, editeToggle }: { product: Product, editeTogg
             </div>
 
             {/* Product Info */}
-            <div className="space-y-6">
+            <div className="flex flex-col">
                 <div className="space-y-2">
                     <div className="flex items-start justify-between">
                         <div>
@@ -25,22 +25,23 @@ const ProductCardView = ({ product, editeToggle }: { product: Product, editeTogg
                     </div>
                     <div className="flex items-end justify-end gap-2">
                         <span
-                            className={`rounded-3xl ${getColor(product.status)} text-white font-semibold text-center px-5 py-1`}
+                            className={`rounded-3xl ${getColor("In Stock")} text-white font-semibold text-center px-5 py-1`}
                         >
-                            {product.status}
+                            {/*product.status*/}
+                            In Stock
                         </span>
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                    <p className="text-3xl font-bold">${product.price.toFixed(2)}</p>
+                    <p className="text-3xl font-bold">${/*product.price.toFixed(2)*/} 100 MAD</p>
                 </div>
 
                 <div className="grid gap-4 pt-4">
                     <div className="grid gap-2">
                         <label className="text-sm font-medium">Stock Status</label>
                         <div className="flex items-center gap-4">
-                            <span className="text-2xl font-bold">{product.stock}</span>
+                            <span className="text-2xl font-bold">{/*product.stock*/} 10</span>
                             <span className="text-sm text-muted-foreground">units available</span>
                         </div>
                     </div>

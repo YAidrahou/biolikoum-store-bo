@@ -1,6 +1,6 @@
 'use client';
 import TableLayout from "@/components/common/tablewithdata/TableLayout";
-import { useSizesContext } from "@/context/SizesContext";
+import useSizesHooks from "@/hooks/SizesHooks";
 import { SizeIn } from "@/types/SizeIn";
 import { useState } from "react";
 
@@ -10,15 +10,15 @@ const Sizes = () => {
 
 
     const {
-        loading,
+        loadingSizes,
         sizes,
         add,
         update,
         remove
-    } = useSizesContext();
+    } = useSizesHooks();
 
 
-    if (loading) {
+    if (loadingSizes) {
         return <div>Loading...</div>
     }
 

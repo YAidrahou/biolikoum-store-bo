@@ -10,7 +10,8 @@ const useProductHooks = () => {
         loading,
         addNewRec,
         updateRec,
-        deleteRec
+        deleteRec,
+        getById
     } = useGeneralizedCrudHooks(url);
 
     const {
@@ -36,6 +37,10 @@ const useProductHooks = () => {
         return addImage(image);
     }
 
+    const getProductById = (id:string,callbackDone:(rec:any)=>void) => {
+        return getById(id,callbackDone);
+    }
+
     return {
         products:data,
         errorOnProducts:error,
@@ -44,6 +49,7 @@ const useProductHooks = () => {
         update,
         remove,
         addNewImage,
+        getProductById,
         errorOnImage,
         loadingImage
     }
