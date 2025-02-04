@@ -4,7 +4,6 @@ export interface Product {
     _id?: number;
     image: string;
     name: string;
+    description?: string;
     category: string;
-    sizes: Array<string>;
-    status: "In Stock" | "Out of Stock" | "Low Stock";
 }

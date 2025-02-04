@@ -1,7 +1,7 @@
-import { Product } from "@/types/Product";
+import { Product } from "@/types/ProductIn";
 
-const getColor = (status: Product["status"]) => {
-    const colors: Record<Product["status"], string> = {
+const getColor = (status: string) => {
+    const colors: Record<string, string> = {
         "In Stock": "bg-instock",
         "Out of Stock": "bg-outstock",
         "Low Stock": "bg-lowstock",

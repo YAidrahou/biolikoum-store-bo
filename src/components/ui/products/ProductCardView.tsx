@@ -1,4 +1,4 @@
-import { Product } from "@/types/Product";
+import { Product } from "@/types/ProductIn";
 import getColor from "@/utils/helpers/getColor";
 
 const ProductCardView = ({ product, editeToggle }: { product: any, editeToggle: (id:number) => void }) => {

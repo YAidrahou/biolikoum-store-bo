@@ -1,4 +1,4 @@
-import { Product } from "@/types/Product";
+import { Product } from "@/types/ProductIn";
 import ProductCardGrid from "./ProductCardGrid";
 import ProductCardList from "./ProductCardList";
 import { useProductFilterBar } from "@/context/ProductFilterBarContext";

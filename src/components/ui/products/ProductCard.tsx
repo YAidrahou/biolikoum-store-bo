@@ -1,5 +1,5 @@
 'use client';
-import { Product } from "@/types/Product";
+import { Product } from "@/types/ProductIn";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
