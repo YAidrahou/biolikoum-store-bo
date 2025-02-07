@@ -1,7 +1,13 @@
-const TableHeader = ({ tableHeader }: { tableHeader: Array<string> }) => {
+import { useTableData } from "@/context/TableLayoutDataConfigurationContext";
+
+const TableHeader = () => {
+  const {
+    headerColumns
+  }: { headerColumns: string[] } = useTableData();
+  
   return (
     <div className="flex bg-primary border-b p-3 rounded-t-lg">
-      {tableHeader.map((col) => (
+      {headerColumns.map((col: string) => (
         <div key={col} className="flex-1 text-left px-2 text-white">
           {col.toUpperCase()}
         </div>

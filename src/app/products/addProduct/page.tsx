@@ -1,7 +1,7 @@
 'use client';
 import ProductAddCard from "@/components/ui/products/ProducAddCard";
 import useProductHooks from "@/hooks/ProductHooks";
-import { Product } from "@/types/Product";
+import { Product } from "@/types/ProductIn";
 
 
 const AddProducts = () => {

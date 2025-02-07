@@ -1,4 +1,4 @@
 export interface CategoryIn {
     name: string;
-    parent_id: string | null;
+    parent_id: any | null;
 }

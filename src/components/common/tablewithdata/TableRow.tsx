@@ -2,23 +2,29 @@
 import { useState } from "react";
 import TableRowActions from "./TableRowActions";
 import TableAddRowActions from "./TableAddRowAction";
-import useCategoriesHooks from "@/hooks/CategoriesHooks";
+import { useTableData } from "@/context/TableLayoutDataConfigurationContext";
 
-const TableRow = ({ item, updateItem, deleteItem }: { item: Record<string, any>, updateItem: (item: any) => void, deleteItem: (idItem: string) => void }) => {
+const TableRow = ({ item }: { item: Record<string, any>}) => {
 
     const {
-        categories
-    } = useCategoriesHooks();
+        data,
+        additionalData,
+        deleteRec,
+        updateRec
+    } = useTableData();
+
+
     const [isEdit, setIsEdit] = useState(false);
     const [recToUpdate, setRecToUpdate] = useState({ ...item });
 
     const handleDelete = () => {
-        deleteItem(item["_id"]);
+        deleteRec(item["_id"],()=>{});
     }
 
     const handleUpdate = () => {
-        updateItem(recToUpdate);
-        setIsEdit(false);
+        updateRec(recToUpdate,()=>{
+            setIsEdit(false);
+        });
     }
 
     const editToggle = () => {
@@ -43,18 +49,28 @@ const TableRow = ({ item, updateItem, deleteItem }: { item: Record<string, any>,
                     :
                     Object.entries(recToUpdate).map(([key, value], index) => (
                         (!key.startsWith("_") && !key.startsWith("__")) && (
-                            key.startsWith("parent_id") ?
+                            (key.startsWith("parent_id") || key.startsWith("product_id")) ?
                                 <select
-                                    value={value}
                                     onChange={(e) => handleChange(e, key)}
+                                    key={key}
                                     className="border p-3 w-full mt-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                 >
-                                    <option value="">Select Category</option>
-                                    {categories.map(category => (
-                                        <option key={category["_id"]} value={category["_id"]}>
-                                            {category.name}
-                                        </option>
-                                    ))}
+                                    <option value="">Select { key.startsWith("parent_id") ? "category" : "select product" }</option>
+                                    {
+                                        key.startsWith("parent_id") ?
+                                        data.map(rec => (
+                                            <option key={rec["_id"]} value={rec["_id"]}>
+                                                {rec.name}
+                                            </option>
+                                        ))
+                                        :
+                                        additionalData.map((rec:any) => (
+                                            <option key={rec["_id"]} value={rec["_id"]}>
+                                                {rec.name}
+                                            </option>
+                                        ))
+
+                                    }
                                 </select>
                                 : <input className="bg-background focus:outline-none flex-1 px-2 break-words"
                                     type={key === "price" ? "number" : "text"}

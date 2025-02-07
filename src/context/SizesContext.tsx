@@ -9,8 +9,8 @@ const SizesContext = createContext< SizeContextType | undefined>(undefined);
 const SizesProvider = ({ children }: { children: ReactNode }) => {
     const {
         sizes,
-        loading,
-        error,
+        loadingSizes,
+        errorOnSizes,
         add,
         update,
         remove
@@ -18,8 +18,8 @@ const SizesProvider = ({ children }: { children: ReactNode }) => {
 
     const value = {
         sizes,
-        loading,
-        error,
+        loadingSizes,
+        errorOnSizes,
         add,
         update,
         remove

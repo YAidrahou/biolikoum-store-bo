@@ -18,7 +18,8 @@ const ProductAddCard = ({
     const [product, setProduct] = useState<Product>({
         name: "",
         image: "",
-        category: ""
+        category: "",
+        description: ""
     });
 
     const [image, setImage] = useState<File | null>(null);
@@ -119,7 +120,7 @@ const ProductAddCard = ({
                         <button className="flex-1 py-2 px-4 border text-gray-500 border-gray-500 hover:border-primary hover:text-primary rounded-lg transition duration-300">
                             Cancel
                         </button>
-                        <button className="flex-1 py-2 px-4 border text-gray-500 border-gray-500 hover:border-primary hover:text-primary rounded-lg transition duration-300">
+                        <button type="submit" className="flex-1 py-2 px-4 border text-gray-500 border-gray-500 hover:border-primary hover:text-primary rounded-lg transition duration-300">
                             Add Product
                         </button>
                     </div>

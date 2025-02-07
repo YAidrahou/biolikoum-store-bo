@@ -1,75 +1,48 @@
 'use client';
 import TableLayout from "@/components/common/tablewithdata/TableLayout";
-import useCategoriesHooks from "@/hooks/CategoriesHooks";
+import { TableDataProvider, useTableData } from "@/context/TableLayoutDataConfigurationContext";
 import { CategoryIn } from "@/types/CategoryIn";
-import { useState } from "react";
 
-const Categories = () => {
-
-    const [isAdding, setIsAdding] = useState(false);
-
+const Inner = () => {
 
     const {
-        loadingCategories,
-        categories,
-        add,
-        update,
-        remove
-    } = useCategoriesHooks();
-
-
-    if (loadingCategories) {
-        return <div>Loading...</div>
-    }
-
-    const column = [
-        "name"
-    ];
-
-    const handleAdding = (item: any) => {
-        add(item, () => {
-            setIsAdding(false);
-        })
-
-    }
-
-    const handleUpdating = (item: any) => {
-        update(item, () => { })
-
-    }
-
-    const handleDeleting = (idItem: string) => {
-        remove(idItem, () => { })
-
-    }
-
-
-    const newItem: CategoryIn = {
-        name: ""
-    };
+        isAdding,
+        setIsAdding
+    } = useTableData();
 
     return (
 
         <div className="flex flex-col">
             <div className="flex flex-row items-center justify-between mb-6">
                 <h1 className=" uppercase font-bold text-secondary text-3xl">categories</h1>
-                <button className="bg-primary text-white font-semibold p-4 place-self-end rounded-lg" onClick={() => { setIsAdding(true) }} >Add new category</button>
+                <button className={` text-white font-semibold p-4 place-self-end rounded-lg  ${isAdding ? "bg-gray-400" : "bg-primary"}`} onClick={() => { setIsAdding(true) }} disabled={isAdding}>Add new category</button>
             </div>
 
-            <TableLayout
-                data={categories}
-                newItem={newItem}
-                column={column}
-                isAdding={isAdding}
-                cancleToggle={() => { setIsAdding(false) }}
-                addToggle={handleAdding}
-                updateToggle={handleUpdating}
-                deleteToggle={handleDeleting}
-            />
+            <TableLayout />
         </div>
 
     )
 
 }
+
+const Categories = () => {
+
+    const column = [
+        "name"
+    ];
+
+    const newItem: CategoryIn = {
+        name: "",
+        parent_id: null
+    };
+
+    return (
+        <TableDataProvider url="/api/categories" newItem={newItem} column={column}>
+            <Inner />
+        </TableDataProvider>
+    );
+};
+
+
 
 export default Categories;

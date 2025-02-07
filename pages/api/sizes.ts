@@ -1,5 +1,6 @@
 import connectDB from '@/lib/mongodb';
 import Size from '@/models/Size';
+import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -7,19 +8,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     console.log(req.body)
-    const { name, price } = req.body;
+    const { product_id, size, price } = req.body;
 
-    if (!name || !price ) {
+    if (!product_id || !size || !price ) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
 
-    const size = new Size({
-        name,
+    const sizeR = new Size({
+        product_id : new mongoose.Types.ObjectId(product_id),
+        size,
         price
     });
-    await size.save();
-    return res.status(201).json(size);
+    await sizeR.save();
+    return res.status(201).json(sizeR);
   }
 
   if (req.method === 'GET') {
@@ -39,14 +41,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === 'PUT') {
-    const { _id, name, price } = req.body;
+    const { _id, size, price, product_id } = req.body;
 
-    if (!_id || !name || !price) {
+    if (!_id || !size || !price || !product_id) {
       return res.status(400).json({ message: 'ID and name are required' });
     }
 
-    const size = await Size.findByIdAndUpdate(_id, { name, price }, { new: true });
-    return res.status(200).json(size);
+    const sizeR = await Size.findByIdAndUpdate(_id, { 
+      product_id : new mongoose.Types.ObjectId(product_id),
+      size,
+      price 
+    }, { new: true });
+    return res.status(200).json(sizeR);
   }
 
   return res.status(405).json({ message: 'Method Not Allowed' });
