@@ -1,13 +1,15 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface SizeDocument extends Document {
-    name: string;
-    price: number;
+    product_id:mongoose.Types.ObjectId;
+    size: string;
+    price: string;  
 }
 
 const SizeSchema = new Schema<SizeDocument>({
-    name: { type: String, required: true },
-    price: { type: Number, required: true }
+    product_id: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+    size: { type: String, required: true },
+    price: { type: String, required: true }
 });
 
 const Size = mongoose.models.Size || mongoose.model<SizeDocument>('Size', SizeSchema);

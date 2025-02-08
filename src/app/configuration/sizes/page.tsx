@@ -1,54 +1,31 @@
 'use client';
 import TableLayout from "@/components/common/tablewithdata/TableLayout";
-import { useSizesContext } from "@/context/SizesContext";
+import { ProductsProvider } from "@/context/ProductsContext";
+import { TableDataProvider, useTableData } from "@/context/TableLayoutDataConfigurationContext";
+import useProductHooks from "@/hooks/ProductHooks";
 import { SizeIn } from "@/types/SizeIn";
-import { useState } from "react";
+import { useEffect } from "react";
 
-const Sizes = () => {
+const Inner = () => {
 
-    const [isAdding, setIsAdding] = useState(false);
+    const {
+        isAdding,
+        setIsAdding,
+        setAdditionalData
+    } = useTableData();
 
 
     const {
-        loading,
-        sizes,
-        add,
-        update,
-        remove
-    } = useSizesContext();
+        products,
+        loadingProducts
+    } = useProductHooks();
 
 
-    if (loading) {
-        return <div>Loading...</div>
-    }
-
-    const column = [
-        "size",
-        "price"
-    ];
-
-
-    const handleAdding = (item: any) => {
-        add(item, () => {
-            setIsAdding(false);
-        })
-
-    }
-
-    const handleUpdating = (item: any) => {
-        update(item, () => {})
-
-    }
-
-    const handleDeleting = (idItem: string) => {
-        remove(idItem, () => {})
-
-    }
-
-    const newItem: SizeIn = {
-        name: "",
-        price: 0
-    };
+    useEffect(() => {
+        if (!loadingProducts) {
+            setAdditionalData(products);
+        }
+    }, [loadingProducts, products, setAdditionalData]);
 
     return (
 
@@ -57,21 +34,35 @@ const Sizes = () => {
                 <h1 className=" uppercase font-bold text-secondary text-3xl">sizes</h1>
                 <button className={`text-white font-semibold p-4 place-self-end rounded-lg ${isAdding ? "bg-gray-400" : "bg-primary"}`} onClick={() => { setIsAdding(true) }} disabled={isAdding}>Add new size</button>
             </div>
-
-            <TableLayout
-                data={sizes}
-                newItem={newItem}
-                column={column}
-                isAdding={isAdding}
-                cancleToggle={() => { setIsAdding(false) }}
-                addToggle={handleAdding}
-                updateToggle={handleUpdating}
-                deleteToggle={handleDeleting}
-            />
+            <TableLayout />
         </div>
 
     )
 
 }
+
+const Sizes = () => {
+
+    const column = [
+        "product_id",
+        "size",
+        "price"
+    ];
+
+
+    const newItem: SizeIn = {
+        product_id: "",
+        size: "",
+        price: ""
+    };
+
+    return (
+        <TableDataProvider url="/api/sizes" newItem={newItem} column={column}>
+            <ProductsProvider>
+                <Inner />
+            </ProductsProvider>
+        </TableDataProvider>
+    );
+};
 
 export default Sizes;

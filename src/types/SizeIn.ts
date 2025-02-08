@@ -1,4 +1,5 @@
 export interface SizeIn {
-    name: string;
-    price: number;
+    product_id: string;
+    size: string;
+    price: string;
 }

@@ -1,0 +1,42 @@
+
+services:
+  nextjs:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+      - elasticsearch
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/biolikoum-store
+      - ELASTICSEARCH_URI=http://elasticsearch:9200
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: always
+
+  mongodb:
+    image: mongo:8.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: always
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    restart: always
+
+volumes:
+  mongodb_data:
+  elasticsearch_data:

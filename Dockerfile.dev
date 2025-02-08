@@ -1,0 +1,20 @@
+# Use Node.js image for development
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and yarn.lock
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN yarn install
+
+# Copy the entire project
+COPY . .
+
+# Expose the default Next.js development port
+EXPOSE 3000
+
+# Start Next.js in development mode
+CMD ["yarn", "dev"]

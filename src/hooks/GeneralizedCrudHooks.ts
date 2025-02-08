@@ -1,102 +1,91 @@
 import axios from "axios";
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react";
 
-const useGeneralizedCrudHooks = (url:string) => {
-
+const useGeneralizedCrudHooks = (url: string) => {
     const [data, setData] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
 
+    const fetchData = useCallback(async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get(url);
+            setData(response.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            setError("Failed to fetch data");
+        } finally {
+            setLoading(false);
+        }
+    }, [url]);
+
     useEffect(() => {
-
-        const fetchData = async () => {
-            try {
-
-                const response = await axios.get(url);
-                setData(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setLoading(false);
-            }
-            
-        }
-
         fetchData();
+    }, [fetchData]);
 
-    },[url]);
-
-
-    const addNewRec = async (newRec:any, callbackDone:() => void) => {
-        
-        const startingData = data.map(function (rec) {
-            return { ...rec };
-        });
+    const addNewRec = async (newRec: any, callbackDone?: () => void) => {
+        const previousData = [...data];
 
         try {
-
-            const response = await axios.post(url,newRec);
-            setData([...data,response.data]);
-            if(callbackDone) callbackDone();
-
+            setLoading(true);
+            const response = await axios.post(url, newRec);
+            setData([...data, response.data]);
+            callbackDone?.();
         } catch (error) {
+            setData(previousData);
+            setError(error instanceof Error ? error.message : "An unexpected error happened");
+        } finally {
             setLoading(false);
-            if(error instanceof Error){
-                const errorMessage = error.message || "an unexpected error happend";
-                setData(startingData);
-                setError(errorMessage);
-            }
         }
-    }
+    };
 
-    const updateRec = async (recToUpdate:any,callbackDone: ()=>void) => {
+    const updateRec = async (recToUpdate: any, callbackDone?: () => void) => {
         try {
+            setLoading(true);
             const response = await axios.put(url, recToUpdate);
-            console.log(recToUpdate);
-            const newDataArray = data.map(rec => rec["_id"] === recToUpdate["_id"] ? response.data : rec);
-            setData(newDataArray);
-            if(callbackDone) callbackDone();
+            setData(data.map(rec => (rec["_id"] === recToUpdate["_id"] ? response.data : rec)));
+            callbackDone?.();
         } catch (error) {
+            setError(error instanceof Error ? error.message : "An unexpected error happened");
+        } finally {
             setLoading(false);
-            if(error instanceof Error){
-                const errorMessage = error.message || "an unexpected error happend";
-                setError(errorMessage);
-            }
         }
-    }
+    };
 
-    const deleteRec = async (id:any, callbackDone:()=>void) => {
+    const deleteRec = async (id: any, callbackDone?: () => void) => {
         try {
-
+            setLoading(true);
             await axios.delete(`${url}?id=${id}`);
-            const newDataArray = data.filter(item => item["_id"] !== id);
-            setData(newDataArray);
-            if(callbackDone) callbackDone();
-
+            setData(data.filter(item => item["_id"] !== id));
+            callbackDone?.();
         } catch (error) {
+            setError(error instanceof Error ? error.message : "An unexpected error happened");
+        } finally {
             setLoading(false);
-            if(error instanceof Error){
-                const errorMessage = error.message || "an unexpected error happend";
-                setError(errorMessage);
-            }
         }
-    }
+    };
 
-    /*const getRec = () => {
-        
-    }*/
+    const getById = async (id: any, callbackDone?: (rec: any) => void) => {
+        try {
+            setLoading(true);
+            const response = await axios.get(`${url}?id=${id}`);
+            callbackDone?.(response.data);
+        } catch (error) {
+            setError(error instanceof Error ? error.message : "An unexpected error happened");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return {
         data,
         loading,
         error,
-        setLoading,
-        setError,
         addNewRec,
         updateRec,
-        deleteRec
-    }
-
-}
+        deleteRec,
+        getById
+    };
+};
 
 export default useGeneralizedCrudHooks;

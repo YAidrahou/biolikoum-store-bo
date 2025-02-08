@@ -1,5 +1,6 @@
 import connectDB from '@/lib/mongodb';
 import Category from '@/models/Category';
+import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -7,14 +8,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     console.log(req.body)
-    const { name } = req.body;
+    const { name, parent_id } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
 
-    const category = new Category({name});
+    const category = new Category({
+      name,
+      parent_id : parent_id ? new mongoose.Types.ObjectId(parent_id) : null
+    });
     await category.save();
     return res.status(201).json(category);
   }
@@ -42,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ message: 'ID and name are required' });
     }
 
-    const category = await Category.findByIdAndUpdate(_id, { name }, { new: true });
+    const category = await Category.findByIdAndUpdate(_id, { ...req.body }, { new: true });
     return res.status(200).json(category);
   }
 

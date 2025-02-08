@@ -1,16 +1,34 @@
 'use client';
-import { Product } from "@/types/Product";
+import { Product } from "@/types/ProductIn";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCardView from "./ProductCardView";
 import ProductCardEdit from "./ProductCardEdit";
+import useProductHooks from "@/hooks/ProductHooks";
 
-const ProductCard = ({ product }: { product: Product }) => {
+const ProductCard = ({ id }: { id: string }) => {
+
+    const { 
+        loadingProducts,
+        getProductById
+    } = useProductHooks();
 
     const [isEditing, setIsEditing] = useState(false);
+    const [product, setProduct] = useState<Product>();
+    const [loading, setLoading] = useState(true);
+
     const [productId, setProductId] = useState<number | undefined>(undefined);
+
+    useEffect(()=>{
+        setLoading(true);
+        getProductById(id,(rec:any)=>{
+            setProduct(rec);
+            setLoading(false);
+        })
+        
+    },[id])
 
     const handleToggleEdit = (id:number) => {
         setProductId(id);
@@ -24,6 +42,8 @@ const ProductCard = ({ product }: { product: Product }) => {
     const handleUpdateToggle = () => {
         setIsEditing(!isEditing);
     }
+
+    if(loading) return <p>loadind product...</p>
 
     return (
         <div className="flex flex-col">

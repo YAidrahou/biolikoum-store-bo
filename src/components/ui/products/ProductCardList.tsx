@@ -1,5 +1,4 @@
-import { Product } from "@/types/Product";
-import getColor from "@/utils/helpers/getColor";
+import { Product } from "@/types/ProductIn";
 
 const ProductCardList = ({ product }: { product: Product }) => {
     return (
@@ -8,12 +7,11 @@ const ProductCardList = ({ product }: { product: Product }) => {
                 <img className="size-20 flex-none rounded-lg bg-gray-50" src={product.image} alt="" />
                 <div className="min-w-0 flex-auto">
                     <p className="text-2xl font-semibold text-gray-900">{product.name}</p>
-                    <p className="mt-1 truncate text-sm text-gray-500">{product.category}</p>
+                    <p className="mt-1 truncate text-sm text-gray-500">{product.description}</p>
                 </div>
             </div>
             <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                <p className="text-2xl font-bold text-gray-900 mb-3">{product.price} MAD</p>
-                <p className={`rounded-3xl ${getColor(product.status)} text-white font-normal text-center text-[12px] px-4 py-1`}>{product.status}</p>
+                <p className="text-2xl font-bold text-gray-900 mb-3">{product.category}</p>
             </div>
         </li>
     );

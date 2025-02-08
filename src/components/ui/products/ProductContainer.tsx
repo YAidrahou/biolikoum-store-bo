@@ -1,4 +1,4 @@
-import { Product } from "@/types/Product";
+import { Product } from "@/types/ProductIn";
 import ProductCardGrid from "./ProductCardGrid";
 import ProductCardList from "./ProductCardList";
 import { useProductFilterBar } from "@/context/ProductFilterBarContext";
@@ -18,13 +18,13 @@ const ProductContainer = () => {
 
     return (
        
-        <>
+        <div className="flex flex-col w-full">
             <div className="flex justify-end w-full py-4">
-                <Link href="/products/addProduct" className="bg-primary text-white font-semibold text-2xl p-4 place-self-end rounded-md mr-3"> Add new product</Link>
+                <Link href="/products/addProduct" className="bg-primary text-white font-semibold text-lg p-2 place-self-end rounded-md mr-3"> Add new product</Link>
             </div>
             {
                 view === "grid" ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full p-4 overflow-y-auto">
 
                         {
                             products.map((product : Product) =>
@@ -44,7 +44,7 @@ const ProductContainer = () => {
                 )
 
             }
-        </>
+        </div>
     );
 }
 export default ProductContainer;
