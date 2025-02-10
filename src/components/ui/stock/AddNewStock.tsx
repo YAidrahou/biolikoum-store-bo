@@ -1,10 +1,25 @@
 'use client';
 import FormInput from "@/components/common/forms/FormInput";
 import FormSelect from "@/components/common/forms/FormSelect";
+import { useStockContext } from "@/context/StockContext";
 import { StockIn } from "@/types/StockIn";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const AddNewStock = ({ closeToggle }:{ closeToggle:()=>void }) => {
+const AddNewStock = (
+    {
+        closeToggle
+    }: {
+        closeToggle: () => void
+    }) => {
+
+    const {
+        addStock,
+        sizesWithDetails,
+        errorDetails,
+        loadingDetails,
+        getSizeWithDetails,
+        stockLoading
+    } = useStockContext();
 
     const [stock, setStock] = useState<StockIn>({
         size_id: "",
@@ -22,33 +37,27 @@ const AddNewStock = ({ closeToggle }:{ closeToggle:()=>void }) => {
 
     }
 
-    const options = [
-        {
-            id:"HJGJHFJHFGHFGHF",
-            name: "500ml"
-        },
-        {
-            id:"BGFDSFDJSHJDFF",
-            name: "250ml"
-        },
-        {
-            id:"BVSDQHJGFHQ",
-            name: "1000ml"
-        }
-    ]
-
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        console.log(stock);
-        closeToggle();
+        addStock(stock, () => {
+            closeToggle();
+        })
     }
+
+    if (errorDetails) { return <p> Error while getting : {errorDetails}.</p> }
+    if (loadingDetails) { return <p> Loading... </p> }
+
+    const transformedSizeData = sizesWithDetails.map(({ _id, size, productDetails }: { _id: any, size: string, productDetails: any }) => ({
+        _id,
+        name: productDetails?.name + " -- " + size,
+    }));
 
     return (
         <div className="flex w-full lg:w-[700px] h-[500px] justify-center items-center mb-10 p-4 bg-gray-200 rounded-lg">
             <form onSubmit={handleSubmit} className="flex flex-col w-full lg:w-[400px] space-y-4">
 
                 <div className="mb-4 w-full">
-                    <FormSelect value={stock.size_id} keyInput="size_id" options={options} label="Size" handleChange={(value) => handleChange("size_id", value)} />
+                    <FormSelect value={stock.size_id} keyInput="size_id" options={transformedSizeData} label="Product" handleChange={(value) => handleChange("size_id", value)} />
                 </div>
 
                 <div className="mb-4 w-full">

@@ -24,6 +24,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(201).json(sizeR);
   }
 
+  if (req.method === 'GET' && req.query.withDetails === 'true') {
+    try {
+      const stockListWithDetails = await Size.aggregate([
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'product_id',
+            foreignField: '_id',
+            as: 'productDetails'
+          }
+        },
+        { $unwind: { path: '$productDetails', preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            _id: 1,
+            size: 1,
+            'productDetails.name': 1
+          }
+        }
+      ]);
+      //const sizesWithProducts = await Size.find().populate('product_id');
+      return res.status(200).json(stockListWithDetails);
+    } catch (error) {
+      return res.status(500).json({ message: 'Error fetching data', error });
+    }
+  }
+
   if (req.method === 'GET') {
     const sizes = await Size.find();
     return res.status(200).json(sizes);

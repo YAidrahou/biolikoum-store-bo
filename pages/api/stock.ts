@@ -3,6 +3,50 @@ import Stock from '@/models/Stock';
 import mongoose from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+async function getStockWithDetails() {
+  return Stock.aggregate([
+    {
+      $lookup: {
+        from: 'sizes',
+        localField: 'size_id',
+        foreignField: '_id',
+        as: 'sizeDetails'
+      }
+    },
+    { $unwind: { path: '$sizeDetails', preserveNullAndEmptyArrays: true } }, // To avoid errors on missing data
+    {
+      $lookup: {
+        from: 'products',
+        localField: 'sizeDetails.product_id',
+        foreignField: '_id',
+        as: 'productDetails'
+      }
+    },
+    { $unwind: { path: '$productDetails', preserveNullAndEmptyArrays: true } },
+    {
+      $lookup: {
+        from: 'categories',
+        localField: 'productDetails.category',
+        foreignField: '_id',
+        as: 'categoryDetails'
+      }
+    },
+    { $unwind: { path: '$categoryDetails', preserveNullAndEmptyArrays: true } },
+    {
+      $project: {
+        _id: 1,
+        quantity: 1,
+        status: 1,
+        'sizeDetails.size': 1,
+        'sizeDetails.price': 1,
+        'productDetails.name': 1,
+        'productDetails.image': 1,
+        'categoryDetails.name': 1
+      }
+    }
+  ]);
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   await connectDB();
@@ -21,47 +65,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       size_id: new mongoose.Types.ObjectId(size_id)
     });
     await stock.save();
-    return res.status(201).json(stock);
+    const savedStock = await getStockWithDetails();
+    const newStock = savedStock.find((item: any) => item._id.toString() === stock._id.toString());
+    return res.status(201).json(newStock);
   }
 
   if (req.method === 'GET') {
-    const stockListWithDetails = await Stock.aggregate([
-      {
-        $lookup: {
-          from: 'sizes',
-          localField: 'size_id',
-          foreignField: '_id',
-          as: 'sizeDetails'
-        }
-      },
-      {
-        $unwind: '$sizeDetails'
-      },
-      {
-        $lookup: {
-          from: 'products',
-          localField: 'sizeDetails.product_id',
-          foreignField: '_id',
-          as: 'productDetails'
-        }
-      },
-      {
-        $unwind: '$productDetails'
-      },
-      {
-        $lookup: {
-          from: 'categories',
-          localField: 'productDetails.category',
-          foreignField: '_id',
-          as: 'categoryDetails'
-        }
-      },
-      {
-        $unwind: '$categoryDetails'
-      }
-    ]);
-    return res.status(200).json(stockListWithDetails);
+    try {
+      const stockListWithDetails = await getStockWithDetails();
+
+      return res.status(200).json(stockListWithDetails);
+    } catch (error:any) {
+      return res.status(500).json({ error: 'An error occurred', details: error.message });
+    }
   }
+
 
   if (req.method === 'DELETE') {
     const { id } = req.query;

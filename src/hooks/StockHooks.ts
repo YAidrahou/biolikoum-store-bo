@@ -1,9 +1,10 @@
+import { useEffect } from "react";
 import useGeneralizedCrudHooks from "./GeneralizedCrudHooks";
+import useSizeWithProductDetailsHooks from "./SizeWithProductDetailsHooks";
 
 const useStockHooks = () => {
 
     const urlStock = "/api/stock";
-    const urlSize = "/api/sizes";
 
     const {
 
@@ -17,12 +18,16 @@ const useStockHooks = () => {
     } = useGeneralizedCrudHooks(urlStock);
 
     const { 
+        sizesWithDetails,
+        errorDetails,
+        loadingDetails,
+        getWithDetails        
 
-        data : sizeData,
-        loading : sizeLoading,
-        error : sizeError
+    } = useSizeWithProductDetailsHooks();
 
-    } = useGeneralizedCrudHooks(urlSize);
+    useEffect(() => {
+        getWithDetails();
+    },[])
 
 
     const addStock = (record : any,callbackDone?: () => void) => {
@@ -37,14 +42,19 @@ const useStockHooks = () => {
         deleteRec(record, callbackDone ? callbackDone : undefined)
     }
 
+    const getSizeWithDetails = (callbackDone?: () => void ) => {
+        getWithDetails(callbackDone ? callbackDone : undefined)
+    }
+
 
     return {
         stockData,
         stockLoading,
         stockError,
-        sizeData,
-        sizeLoading,
-        sizeError,
+        sizesWithDetails,
+        errorDetails,
+        loadingDetails,
+        getSizeWithDetails,   
         addStock,
         updateStock,
         removeStock

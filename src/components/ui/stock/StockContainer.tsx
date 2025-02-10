@@ -5,6 +5,7 @@ import { useState } from "react";
 import AddNewStock from "./AddNewStock";
 
 const StockContainer = () => {
+    
     const {view} = useProductFilterBar();
     const [isAdding, setIsAdding] = useState(false);
     
@@ -12,7 +13,6 @@ const StockContainer = () => {
     const handleAdding = () => {
 
         setIsAdding(!isAdding);
-        console.log(isAdding);
 
     }
 

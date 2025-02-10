@@ -25,7 +25,7 @@ const FormSelect = ({
                     <option value="" > Select </option>
                 {
                     options.map((option:any) => (
-                        <option key={option.id} value={option.id}>
+                        <option key={option._id} value={option._id}>
                             {option.name}
                         </option>
                     ))
